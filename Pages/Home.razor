@@ -5,13 +5,12 @@
 
 <div class="page">
     <header class="top">
-        <div class="brand">💛 LoveCards</div>
-        <div class="sub">маленькая поддержка в один клик</div>
+        <div class="brand">Милая Даша</div>
     </header>
 
     <main class="content">
         <button class="big-btn" @onclick="ShowDaily">
-            Нажми, если нужна поддержка 💛
+            Это пройдет 💛
         </button>
 
         @if (_current is not null)
@@ -39,11 +38,11 @@
                 <div class="card-actions">
                     @if (_isFavorite)
                     {
-                        <button class="small-btn" @onclick="ToggleFavorite">★ В избранном</button>
+                        <button class="small-btn" @onclick="ToggleFavorite">★</button>
                     }
                     else
                     {
-                        <button class="small-btn" @onclick="ToggleFavorite">☆ В избранное</button>
+                        <button class="small-btn" @onclick="ToggleFavorite">☆</button>
                     }
 
                     <button class="small-btn" @onclick="ShowBonus">Мне нужно ещё чуть-чуть</button>
@@ -54,7 +53,7 @@
         @if (_favorites.Count > 0)
         {
             <section class="favorites">
-                <div class="favorites-title">Избранное</div>
+                <div class="favorites-title"> Нажми чтобы сохранить напоминание </div>
 
                 @foreach (var f in _favorites)
                 {
