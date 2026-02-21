@@ -2,6 +2,10 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+# Root-level IDE/service files
+/.idea/
+.DS_Store
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -116,6 +120,7 @@ bld/
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
+wwwroot/service-worker-assets.js
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
@@ -477,3 +482,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Blazor publish output
+wwwroot/_framework/
+wwwroot/_bin/
+
+# If you publish to docs (GitHub Pages)
+docs/
