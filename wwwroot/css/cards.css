@@ -1,0 +1,162 @@
+.card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 10px 30px rgba(255, 105, 180, 0.15),
+        0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.card > :not(.hearts) {
+    position: relative;
+    z-index: 1;
+}
+
+.card-title {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.card-text {
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+.card-hint {
+    margin-top: 14px;
+    font-size: 14px;
+    opacity: .85;
+}
+
+.card-sign {
+    margin-top: 12px;
+    font-weight: 600;
+    opacity: .75;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.small-btn {
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(6px);
+}
+
+.favorites {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.favorites-title {
+    font-weight: 800;
+    margin: 8px 2px;
+    opacity: .8;
+}
+
+.fav-card {
+    border-radius: 16px;
+    padding: 12px 12px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.08);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.fav-title {
+    font-weight: 800;
+}
+
+.fav-text {
+    margin-top: 8px;
+    opacity: .9;
+}
+
+.fav-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.fav-sign {
+    opacity: .65;
+    font-weight: 600;
+}
+
+.link-btn {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: .75;
+}
+
+.hearts {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.heart {
+    position: absolute;
+    bottom: -14px;
+    opacity: 0;
+    transform: translateY(0) scale(.9) rotate(0deg);
+    animation: floatHeart 1100ms ease-out forwards;
+    font-weight: bold;
+}
+
+.h1 { left: 12%; font-size: 18px; color: #ff4d6d; animation-delay: 0ms; }
+.h2 { left: 28%; font-size: 14px; color: #ff85a2; animation-delay: 60ms; }
+.h3 { left: 46%; font-size: 20px; color: #ff99c8; animation-delay: 120ms; }
+.h4 { left: 62%; font-size: 16px; color: #f15bb5; animation-delay: 90ms; }
+.h5 { left: 78%; font-size: 19px; color: #ff7096; animation-delay: 150ms; }
+.h6 { left: 90%; font-size: 13px; color: #ff477e; animation-delay: 30ms; }
+
+@keyframes floatHeart {
+    0%   { opacity: 0; transform: translateY(0) scale(.8) rotate(-10deg); }
+    20%  { opacity: .7; }
+    60%  { opacity: .4; }
+    100% { opacity: 0; transform: translateY(-90px) scale(1.15) rotate(12deg); }
+}
+
+.card-animate {
+    transform-origin: 50% 40%;
+    animation: cardPop 420ms cubic-bezier(.2,.9,.2,1), cardGlow 700ms ease-out;
+    will-change: transform, opacity, box-shadow, filter;
+}
+
+@keyframes cardPop {
+    0%   { opacity: 0; transform: translateY(10px) scale(.98); }
+    60%  { opacity: 1; transform: translateY(0) scale(1.02); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cardGlow {
+    0%   { filter: brightness(1); box-shadow: 0 10px 24px rgba(0,0,0,.10); }
+    35%  { filter: brightness(1.04); box-shadow: 0 14px 30px rgba(0,0,0,.14); }
+    100% { filter: brightness(1); box-shadow: 0 10px 24px rgba(0,0,0,.10); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-animate { animation: none !important; }
+    .heart { animation: none !important; display: none; }
+}

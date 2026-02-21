@@ -1,0 +1,130 @@
+﻿@page "/"
+@using LoveCards.Models
+@inject LoveCards.Services.CardService Cards
+@inject IJSRuntime JS
+
+<div class="page">
+    <header class="top">
+        <div class="brand">💛 LoveCards</div>
+        <div class="sub">маленькая поддержка в один клик</div>
+    </header>
+
+    <main class="content">
+        <button class="big-btn" @onclick="ShowDaily">
+            Нажми, если нужна поддержка 💛
+        </button>
+
+        @if (_current is not null)
+        {
+            <section class="card card-animate" @key="_cardRenderKey">
+                <div class="hearts" aria-hidden="true">
+                    <span class="heart h1">❤</span>
+                    <span class="heart h2">❤</span>
+                    <span class="heart h3">❤</span>
+                    <span class="heart h4">❤</span>
+                    <span class="heart h5">❤</span>
+                    <span class="heart h6">❤</span>
+                </div>
+
+                <div class="card-title">@_current.Title</div>
+                <div class="card-text">@_current.Text</div>
+
+                @if (!string.IsNullOrWhiteSpace(_current.ActionHint))
+                {
+                    <div class="card-hint">✨ @_current.ActionHint</div>
+                }
+
+                <div class="card-sign">@_current.Signature</div>
+
+                <div class="card-actions">
+                    @if (_isFavorite)
+                    {
+                        <button class="small-btn" @onclick="ToggleFavorite">★ В избранном</button>
+                    }
+                    else
+                    {
+                        <button class="small-btn" @onclick="ToggleFavorite">☆ В избранное</button>
+                    }
+
+                    <button class="small-btn" @onclick="ShowBonus">Мне нужно ещё чуть-чуть</button>
+                </div>
+            </section>
+        }
+
+        @if (_favorites.Count > 0)
+        {
+            <section class="favorites">
+                <div class="favorites-title">Избранное</div>
+
+                @foreach (var f in _favorites)
+                {
+                    <div class="fav-card">
+                        <div class="fav-title">@f.Title</div>
+                        <div class="fav-text">@f.Text</div>
+                        <div class="fav-footer">
+                            <span class="fav-sign">@f.Signature</span>
+                            <button class="link-btn" @onclick="() => RemoveFavorite(f)">Удалить</button>
+                        </div>
+                    </div>
+                }
+            </section>
+        }
+    </main>
+
+    <footer class="footer">
+        сделано с теплом ✨
+    </footer>
+</div>
+
+@code {
+    private SupportCard? _current;
+    private bool _isFavorite;
+    private List<SupportCard> _favorites = new();
+    private int _cardRenderKey = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _favorites = await Cards.GetFavoritesAsync();
+    }
+
+    private async Task ShowDaily()
+    {
+        _current = await Cards.GetDailyCardAsync();
+        _cardRenderKey++; // заставляет DOM пересоздать карточку => анимация сработает
+        await JS.InvokeVoidAsync("appHaptics.vibrate", 15);
+        await RefreshFavoriteFlag();
+    }
+
+    private async Task ShowBonus()
+    {
+        _current = await Cards.GetBonusCardAsync();
+        _cardRenderKey++;
+        await JS.InvokeVoidAsync("appHaptics.vibrate", 10);
+        await RefreshFavoriteFlag();
+    }
+
+    private async Task ToggleFavorite()
+    {
+        if (_current is null) return;
+
+        if (_isFavorite) await Cards.RemoveFavoriteAsync(_current);
+        else await Cards.AddFavoriteAsync(_current);
+
+        _favorites = await Cards.GetFavoritesAsync();
+        await RefreshFavoriteFlag();
+
+        await JS.InvokeVoidAsync("appHaptics.vibrate", 8);
+    }
+
+    private async Task RemoveFavorite(SupportCard card)
+    {
+        await Cards.RemoveFavoriteAsync(card);
+        _favorites = await Cards.GetFavoritesAsync();
+        await RefreshFavoriteFlag();
+    }
+
+    private async Task RefreshFavoriteFlag()
+    {
+        _isFavorite = _current is not null && await Cards.IsFavoriteAsync(_current);
+    }
+}
