@@ -19,6 +19,7 @@ window.petalsFx = (() => {
 
         dustRoot: null,
         gustUntil: 0,
+        lastTapTs: 0,
     };
 
     function rand(min, max) { return Math.random() * (max - min) + min; }
@@ -194,11 +195,12 @@ window.petalsFx = (() => {
     }
 
     function burstAt(clientX, clientY) {
-        // “всплеск” 6–10 лепестков
-        const count = Math.floor(rand(6, 11));
+        // лёгкий "всплеск": 2–3 лепестка
+        const count = Math.random() < 0.6 ? 2 : 3;
+
         for (let i = 0; i < count; i++) {
-            const px = clientX + rand(-20, 20);
-            const py = clientY + rand(-20, 20);
+            const px = clientX + rand(-14, 14);
+            const py = clientY + rand(-14, 14);
             makePetal(px, py, true);
         }
     }
@@ -255,7 +257,12 @@ window.petalsFx = (() => {
         for (let i = 0; i < 10; i++) makePetal(null, null, false);
 
         // Ловим тап/клик на документе, но НЕ мешаем кнопкам
+        
         const handler = (ev) => {
+            const now = performance.now();
+            if (now - state.lastTapTs < 120) return; // не чаще 1 раза в 120мс
+            state.lastTapTs = now;
+            
             const target = ev.target;
             if (!target) return;
 
