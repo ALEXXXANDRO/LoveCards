@@ -244,6 +244,33 @@ window.petalsFx = (() => {
             lastT = t;
         }, { passive: true });
     }
+    function initParallax() {
+        const sakura = document.querySelector(".fx-sakura");
+        if (!sakura) return;
+
+        let ticking = false;
+
+        function update() {
+            const scrollY = window.scrollY;
+            const vh = window.innerHeight;
+
+            // коэффициенты движения (очень мягкие)
+            const translateY = scrollY * 0.18;  // вертикальный параллакс
+            const translateX = Math.sin(scrollY / 400) * 12; // лёгкое боковое плавание
+
+            sakura.style.transform =
+                `translate3d(${translateX}px, ${translateY}px, 0)`;
+
+            ticking = false;
+        }
+
+        window.addEventListener("scroll", () => {
+            if (!ticking) {
+                window.requestAnimationFrame(update);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
     function init() {
         state.petalsRoot = document.getElementById("petals");
         if (!state.petalsRoot) return;
@@ -252,6 +279,7 @@ window.petalsFx = (() => {
         if (state.dustRoot) seedDust(window.innerWidth < 520 ? 12 : 18);
 
         initScrollWind();
+        initParallax();
 
         // стартовое заполнение
         for (let i = 0; i < 10; i++) makePetal(null, null, false);
