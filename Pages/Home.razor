@@ -49,25 +49,34 @@
     <footer class="footer">
         сделано с теплом ✨
     </footer>
+    
+    
+    <div class="fx" aria-hidden="true">
+        <div class="fx-shimmer"></div>
+        <div class="glow-dust" id="glowDust"></div>
+        <div class="petals" id="petals"></div>
+    </div>
+    
 </div>
 
 @code {
     private SupportCard? _current;
-    private bool _isFavorite;
-    private List<SupportCard> _favorites = new();
     private int _cardRenderKey = 0;
-
-    protected override async Task OnInitializedAsync()
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _favorites = await Cards.GetFavoritesAsync();
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("petalsFx.init");
+        }
     }
 
     private async Task ShowDaily()
     {
         _current = await Cards.GetDailyCardAsync();
-        _cardRenderKey++; // заставляет DOM пересоздать карточку => анимация сработает
+        _cardRenderKey++;
         await JS.InvokeVoidAsync("appHaptics.vibrate", 15);
-        await RefreshFavoriteFlag();
+        await JS.InvokeVoidAsync("petalsFx.gust", 85, 900); // сила, длительность мс
     }
 
     private async Task ShowBonus()
@@ -75,31 +84,6 @@
         _current = await Cards.GetBonusCardAsync();
         _cardRenderKey++;
         await JS.InvokeVoidAsync("appHaptics.vibrate", 10);
-        await RefreshFavoriteFlag();
-    }
-
-    private async Task ToggleFavorite()
-    {
-        if (_current is null) return;
-
-        if (_isFavorite) await Cards.RemoveFavoriteAsync(_current);
-        else await Cards.AddFavoriteAsync(_current);
-
-        _favorites = await Cards.GetFavoritesAsync();
-        await RefreshFavoriteFlag();
-
-        await JS.InvokeVoidAsync("appHaptics.vibrate", 8);
-    }
-
-    private async Task RemoveFavorite(SupportCard card)
-    {
-        await Cards.RemoveFavoriteAsync(card);
-        _favorites = await Cards.GetFavoritesAsync();
-        await RefreshFavoriteFlag();
-    }
-
-    private async Task RefreshFavoriteFlag()
-    {
-        _isFavorite = _current is not null && await Cards.IsFavoriteAsync(_current);
+        await JS.InvokeVoidAsync("petalsFx.gust", 55, 650);
     }
 }

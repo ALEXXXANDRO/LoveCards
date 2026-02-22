@@ -64,3 +64,134 @@
 .brand {
     color: #5C3A5E;
 }
+
+/* ===== FX: лепестки + переливы ===== */
+
+/* чтобы эффекты не вылезали за пределы */
+.page {
+    position: relative;
+    overflow: hidden;
+}
+
+/* эффекты поверх всего */
+.fx {
+    position: fixed;
+    inset: 0;
+    pointer-events: none; /* не мешаем кликам */
+    z-index: 10; 
+}
+
+/* поднимаем основной UI над эффектами */
+.top, .content, .footer {
+    position: relative;
+    z-index: 20;
+}
+
+.top, .content, .footer {
+    pointer-events: auto;
+}
+
+/* нежный перелив/сияние снизу */
+.fx-shimmer {
+    position: absolute;
+    inset: -20vh -20vw -10vh -20vw;
+    background:
+            radial-gradient(60vh 35vh at 20% 110%, rgba(255, 126, 179, 0.22), transparent 60%),
+            radial-gradient(55vh 30vh at 70% 115%, rgba(255, 221, 140, 0.18), transparent 60%),
+            radial-gradient(60vh 40vh at 50% 120%, rgba(162, 196, 255, 0.12), transparent 62%);
+    filter: blur(18px);
+    opacity: 0.9;
+    animation: shimmerFloat 10s ease-in-out infinite alternate;
+}
+
+@keyframes shimmerFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-18px); }
+}
+
+/* контейнер лепестков */
+.petals {
+    position: absolute;
+    inset: 0;
+}
+
+/* лепесток (DOM-элемент span.petal) */
+.petal {
+    position: absolute;
+    top: -12vh;
+    width: var(--size, 18px);
+    height: calc(var(--size, 18px) * 1.45);
+    border-radius: 80% 20% 70% 30%;
+    background: radial-gradient(circle at 30% 30%,
+    rgba(255,255,255,0.75),
+    rgba(255, 151, 196, 0.75) 55%,
+    rgba(255, 120, 175, 0.55) 100%);
+    box-shadow: 0 10px 22px rgba(255, 120, 175, 0.18);
+    opacity: var(--op, 0.85);
+    transform: translate3d(0,0,0) rotate(0deg);
+    will-change: transform, top, left;
+    filter: blur(0.15px);
+}
+
+/* предпочитают меньше анимаций */
+@media (prefers-reduced-motion: reduce) {
+    .fx-shimmer { animation: none !important; }
+}
+
+/* ===== Пылинки/блики снизу ===== */
+
+.glow-dust {
+    position: absolute;
+    left: -10vw;
+    right: -10vw;
+    bottom: -8vh;
+    height: 26vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* мягкая дымка/боке */
+.glow-dust::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+            radial-gradient(10px 10px at 12% 70%, rgba(255,255,255,0.55), transparent 60%),
+            radial-gradient(8px 8px   at 24% 85%, rgba(255, 240, 210, 0.35), transparent 60%),
+            radial-gradient(12px 12px at 38% 78%, rgba(255, 170, 210, 0.28), transparent 60%),
+            radial-gradient(9px 9px   at 55% 88%, rgba(255,255,255,0.42), transparent 60%),
+            radial-gradient(13px 13px at 72% 76%, rgba(255, 230, 170, 0.25), transparent 62%),
+            radial-gradient(10px 10px at 86% 86%, rgba(255, 180, 220, 0.22), transparent 62%);
+    filter: blur(1px);
+    opacity: 0.75;
+    animation: dustFloat 8s ease-in-out infinite alternate;
+}
+
+@keyframes dustFloat {
+    from { transform: translateY(0); opacity: 0.65; }
+    to   { transform: translateY(-18px); opacity: 0.85; }
+}
+
+/* отдельные “искры” (DOM элементы span) */
+.dust-dot {
+    position: absolute;
+    width: var(--d, 6px);
+    height: var(--d, 6px);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
+
+    opacity: var(--op, 0.9);
+    animation: dotRise var(--t, 6s) ease-in-out infinite;
+    transform: translate3d(0,0,0);
+    will-change: transform, opacity;
+}
+
+@keyframes dotRise {
+    0%   { transform: translate3d(0, 10px, 0); opacity: 0; }
+    20%  { opacity: var(--op, 0.6); }
+    80%  { opacity: var(--op, 0.6); }
+    100% { transform: translate3d(var(--dx, 0px), -70px, 0); opacity: 0; }
+}
