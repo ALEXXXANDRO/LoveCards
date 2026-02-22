@@ -1,10 +1,15 @@
 .page {
     min-height: 100vh;
+    min-height: 100dvh; /* важно для iOS */
     display: flex;
     flex-direction: column;
-    padding: 20px 16px 12px;
+
+    padding: 20px 16px calc(12px + env(safe-area-inset-bottom));
     max-width: 560px;
     margin: 0 auto;
+
+    position: relative;
+    overflow: hidden;
 }
 
 .top {
@@ -67,11 +72,6 @@
 
 /* ===== FX: лепестки + переливы ===== */
 
-/* чтобы эффекты не вылезали за пределы */
-.page {
-    position: relative;
-    overflow: hidden;
-}
 
 /* эффекты поверх всего */
 .fx {
@@ -101,6 +101,7 @@
             radial-gradient(60vh 40vh at 50% 120%, rgba(162, 196, 255, 0.12), transparent 62%);
     filter: blur(18px);
     opacity: 0.9;
+    z-index: 1;
     animation: shimmerFloat 10s ease-in-out infinite alternate;
 }
 
@@ -113,6 +114,7 @@
 .petals {
     position: absolute;
     inset: 0;
+    z-index: 3;
 }
 
 /* лепесток (DOM-элемент span.petal) */
@@ -144,10 +146,10 @@
     position: absolute;
     left: -10vw;
     right: -10vw;
-    bottom: -8vh;
+    bottom: calc(-4vh + env(safe-area-inset-bottom));
     height: 26vh;
     pointer-events: none;
-    z-index: 0;
+    z-index: 2;
     overflow: hidden;
 }
 
@@ -194,10 +196,6 @@
     20%  { opacity: var(--op, 0.6); }
     80%  { opacity: var(--op, 0.6); }
     100% { transform: translate3d(var(--dx, 0px), -70px, 0); opacity: 0; }
-}
-
-.page {
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
 .footer {

@@ -49,6 +49,8 @@
 }
 
 .small-btn {
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
     -webkit-appearance: none;
     appearance: none;
     border: 0;
