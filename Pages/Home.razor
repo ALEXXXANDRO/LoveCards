@@ -9,9 +9,13 @@
     </header>
 
     <main class="content">
-        <button class="big-btn" @onclick="ShowDaily">
-            Это пройдет 💛
-        </button>
+        
+        @if (_current is null)
+        {
+            <button class="big-btn" @onclick="ShowDaily">
+                Это пройдёт 💛
+            </button>
+        }
 
         @if (_current is not null)
         {
@@ -36,36 +40,8 @@
                 <div class="card-sign">@_current.Signature</div>
 
                 <div class="card-actions">
-                    @if (_isFavorite)
-                    {
-                        <button class="small-btn" @onclick="ToggleFavorite">★</button>
-                    }
-                    else
-                    {
-                        <button class="small-btn" @onclick="ToggleFavorite">☆</button>
-                    }
-
                     <button class="small-btn" @onclick="ShowBonus">Мне нужно ещё чуть-чуть</button>
                 </div>
-            </section>
-        }
-
-        @if (_favorites.Count > 0)
-        {
-            <section class="favorites">
-                <div class="favorites-title"> </div>
-
-                @foreach (var f in _favorites)
-                {
-                    <div class="fav-card">
-                        <div class="fav-title">@f.Title</div>
-                        <div class="fav-text">@f.Text</div>
-                        <div class="fav-footer">
-                            <span class="fav-sign">@f.Signature</span>
-                            <button class="link-btn" @onclick="() => RemoveFavorite(f)">Удалить</button>
-                        </div>
-                    </div>
-                }
             </section>
         }
     </main>
